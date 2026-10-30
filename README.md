@@ -1,16 +1,22 @@
-# MotoParts API REST 🏍️
+# MotoParts API - Actividad Colaborativa #2
 
-API REST desarrollada con **Java** y **Spring Boot** para gestionar el inventario de repuestos y accesorios de motocicletas.
+## Descripción breve de la API
+API REST desarrollada para la gestión de un inventario de repuestos de motocicletas, incorporando persistencia de datos mediante Spring Boot, JPA, Hibernate y una base de datos embebida H2.
 
-## Requisitos
-- Java 17 o superior
+## Contexto seleccionado
+Gestión de inventario de repuestos para motocicletas, permitiendo el control de stock, precios, categorización y operaciones CRUD completas con consultas personalizadas.
+
+## Integrantes
+- Jhan Jimenez
+
+## Tecnologías utilizadas
+- Java 17+
+- Spring Boot 3.2.5
+- Spring Data JPA / Hibernate
+- Base de datos H2 (en memoria)
 - Maven
 
-## Endpoints
-
-| Método | URL | Descripción |
-| :--- | :--- | :--- |
-| `GET` | `/api/repuestos` | Lista todos los repuestos |
-| `GET` | `/api/repuestos/{id}` | Busca un repuesto por ID (`PathVariable`) |
-| `GET` | `/api/repuestos/buscar?categoria=X` | Filtra por categoría (`RequestParam`) |
-| `POST` | `/api/repuestos` | Registra un nuevo repuesto (`RequestBody` + DTO) |
+## Instrucciones básicas para ejecutar el proyecto
+1. Clona el repositorio:
+   ```bash
+   git clone [https://github.com/jhanjimenez39161-a11y/motoparts-api.git](https://github.com/jhanjimenez39161-a11y/motoparts-api.git)
