@@ -1,10 +1,9 @@
 package com.motoparts.api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "repuestos")
@@ -14,24 +13,34 @@ public class Repuesto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre del repuesto no puede estar vacío")
+    @Column(nullable = false)
     private String nombre;
-    private String categoria;
+
+    @NotNull(message = "El precio es obligatorio")
+    @Positive(message = "El precio debe ser mayor a cero")
+    @Column(nullable = false)
     private Double precio;
-    private Integer stock; 
 
-  
-    public Repuesto() {
-    }
+    @NotNull(message = "El stock es obligatorio")
+    @Column(nullable = false)
+    private Integer stock;
 
-   
-    public Repuesto(String nombre, String categoria, Double precio, Integer stock) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
+    // Constructores
+    public Repuesto() {}
+
+    public Repuesto(String nombre, Double precio, Integer stock, Categoria categoria) {
         this.nombre = nombre;
-        this.categoria = categoria;
         this.precio = precio;
         this.stock = stock;
+        this.categoria = categoria;
     }
 
-   
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -48,14 +57,6 @@ public class Repuesto {
         this.nombre = nombre;
     }
 
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
     public Double getPrecio() {
         return precio;
     }
@@ -70,5 +71,13 @@ public class Repuesto {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }

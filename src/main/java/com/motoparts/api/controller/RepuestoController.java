@@ -1,8 +1,10 @@
 package com.motoparts.api.controller;
 
+import com.motoparts.api.dto.RepuestoRequestDTO;
 import com.motoparts.api.model.Repuesto;
 import com.motoparts.api.repository.RepuestoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.motoparts.api.service.RepuestoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,39 +16,40 @@ import java.util.Optional;
 @RequestMapping("/api/repuestos")
 public class RepuestoController {
 
-    @Autowired
-    private RepuestoRepository repuestoRepository;
+    private final RepuestoService repuestoService;
+    private final RepuestoRepository repuestoRepository;
+
+    public RepuestoController(RepuestoService repuestoService, RepuestoRepository repuestoRepository) {
+        this.repuestoService = repuestoService;
+        this.repuestoRepository = repuestoRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<Repuesto>> listarRepuestos() {
-        List<Repuesto> repuestos = repuestoRepository.findAll();
+        List<Repuesto> repuestos = repuestoService.listarTodos();
         return ResponseEntity.ok(repuestos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Repuesto> obtenerRepuestoPorId(@PathVariable Long id) {
-        Optional<Repuesto> repuesto = repuestoRepository.findById(id);
-        if (repuesto.isPresent()) {
-            return ResponseEntity.ok(repuesto.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        Optional<Repuesto> repuesto = repuestoService.buscarPorId(id);
+        return repuesto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
-    public ResponseEntity<Repuesto> crearRepuesto(@RequestBody Repuesto repuesto) {
-        Repuesto nuevoRepuesto = repuestoRepository.save(repuesto);
+    public ResponseEntity<Repuesto> crearRepuesto(@Valid @RequestBody RepuestoRequestDTO dto) {
+        Repuesto nuevoRepuesto = repuestoService.guardar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoRepuesto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Repuesto> actualizarRepuesto(@PathVariable Long id, @RequestBody Repuesto detallesRepuesto) {
+    public ResponseEntity<Repuesto> actualizarRepuesto(@PathVariable Long id, @Valid @RequestBody RepuestoRequestDTO detallesRepuesto) {
         Optional<Repuesto> repuestoExistente = repuestoRepository.findById(id);
         
         if (repuestoExistente.isPresent()) {
             Repuesto repuesto = repuestoExistente.get();
             repuesto.setNombre(detallesRepuesto.getNombre());
-            repuesto.setCategoria(detallesRepuesto.getCategoria());
             repuesto.setPrecio(detallesRepuesto.getPrecio());
             repuesto.setStock(detallesRepuesto.getStock());
             
@@ -60,16 +63,20 @@ public class RepuestoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarRepuesto(@PathVariable Long id) {
         if (repuestoRepository.existsById(id)) {
-            repuestoRepository.deleteById(id);
+            repuestoService.eliminar(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    @GetMapping("/buscar")
-    public ResponseEntity<List<Repuesto>> buscarPorCategoria(@RequestParam String categoria) {
-        List<Repuesto> repuestos = repuestoRepository.findByCategoria(categoria);
-        return ResponseEntity.ok(repuestos);
+    // Endpoint adicional para demostrar el consumo de la API externa (Conversión a Dólares)
+    @GetMapping("/{id}/precio-dolares")
+    public ResponseEntity<Double> obtenerPrecioEnDolares(@PathVariable Long id) {
+        Double precioDolares = repuestoService.obtenerPrecioEnDolares(id);
+        if (precioDolares > 0) {
+            return ResponseEntity.ok(precioDolares);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

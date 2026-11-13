@@ -1,8 +1,64 @@
 package com.motoparts.api.dto;
 
-public record RepuestoRequestDTO(
-    String nombre,
-    String categoria,
-    Double precio,
-    Integer stock
-) {}
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+public class RepuestoRequestDTO {
+
+    @NotBlank(message = "El nombre del repuesto es obligatorio")
+    private String nombre;
+
+    @NotNull(message = "El precio es obligatorio")
+    @Positive(message = "El precio debe ser mayor a cero")
+    private Double precio;
+
+    @NotNull(message = "El stock es obligatorio")
+    private Integer stock;
+
+    @NotNull(message = "El ID de la categoría es obligatorio")
+    private Long categoriaId;
+
+    // Constructores
+    public RepuestoRequestDTO() {}
+
+    public RepuestoRequestDTO(String nombre, Double precio, Integer stock, Long categoriaId) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+        this.categoriaId = categoriaId;
+    }
+
+    // Getters y Setters
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+}
