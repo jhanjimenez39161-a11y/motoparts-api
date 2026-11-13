@@ -1,0 +1,6 @@
+$kind: http-request
+name: http://localhost:8080/api/repuestos
+description: ""
+url: http://localhost:8080/api/repuestos
+method: GET
+order: 1372

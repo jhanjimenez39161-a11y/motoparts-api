@@ -1,0 +1,6 @@
+$kind: http-request
+name: http://localhost:8080/actuator/health
+description: ""
+url: http://localhost:8080/actuator/health
+method: GET
+order: 3000

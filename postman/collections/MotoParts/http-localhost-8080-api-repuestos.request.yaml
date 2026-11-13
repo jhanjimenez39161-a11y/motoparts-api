@@ -1,0 +1,19 @@
+$kind: http-request
+name: http://localhost:8080/api/repuestos
+description: ""
+url: http://localhost:8080/api/repuestos
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"nombre\": \"Pastillas de Freno Delanteras\",\r
+
+    \  \"precio\": 45000,\r
+
+    \  \"stock\": 15,\r
+
+    \  \"categoriaId\": 1\r
+
+    }"
+order: 1000
